@@ -34,6 +34,9 @@ function App() {
         case 'c':
           setInputMode('center');
           break;
+        case '*':
+          setInputMode('primary');
+          break;
         default:
           console.log(event);
       }

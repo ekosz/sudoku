@@ -99,6 +99,7 @@ const validatedValueWithID = memoize(id => selector({
   get: ({ get }) => get(valueWithID(id)),
   set: ({ get, set }, newValue) => {
     if (![null, 1, 2, 3, 4, 5, 5, 6, 7, 8, 9].includes(newValue)) return;
+    if (get(primariesAtom).includes(id)) return;
     set(valueWithID(id), newValue);
     if (newValue == null && get(errorsAtom).includes(id)) {
       set(errorsAtom, removeItem(get(errorsAtom), get(errorsAtom).indexOf(id)));
@@ -124,6 +125,19 @@ const errorsAtom = atom({
   key: 'errors',
   default: [],
 });
+
+const primariesAtom = atom({
+  key: 'primaries',
+  default: [],
+});
+
+const primaryWithID = memoize(id => selector({
+  get: () => null,
+  set: ({ set }, newValue) => {
+    set(validatedValueWithID(id), newValue);
+    set(primariesAtom, xs => addItem(xs, id));
+  },
+}));
 
 const backgroundWithID = memoize(id => atom({
   key: `background:${id}`,
@@ -175,6 +189,9 @@ const selectionFromInput = selector({
         case 'center':
           atomToSet = toggleCenterNoteWithID;
           break;
+        case 'primary':
+          atomToSet = primaryWithID;
+          break;
         default:
           throw new Error('Invalid input mode');
       }
@@ -203,6 +220,7 @@ const cellWithID = memoize(id => selector({
       centerNotes: get(centerNotesWithID(id)),
       background: get(backgroundWithID(id)),
       isSelected: get(selectionAtom).includes(id),
+      isPrimary: get(primariesAtom).includes(id),
       hasError: get(errorsAtom).includes(id),
     }
   },

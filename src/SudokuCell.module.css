@@ -14,12 +14,15 @@
   align-items: center;
   color: var(--value-color);
 }
+.primary .value {
+  color: var(--primary-color);
+}
 
 .error:not(.selected) {
   background: var(--error-background-color);
 }
 
-.error .value {
+.error:not(.primary) .value {
   color: var(--error-color);
 }
 

@@ -1,4 +1,5 @@
 :root {
+  --primary-color: black;
   --border-color: black;
   --value-color: blue;
   --note-color: rgba(0, 0, 0, 0.25);

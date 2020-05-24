@@ -24,6 +24,7 @@ export default function SudokuCell({ id }) {
   const borders = calcBorderValues(cell.position, cell.hasError);
 
   const containerClassName = cx([styles.container, {
+    [styles.primary]: cell.isPrimary,
     [styles.selected]: cell.isSelected,
     [styles.error]: cell.hasError,
   }]);
