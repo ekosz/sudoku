@@ -25,6 +25,17 @@ const calcPostion = (() => {
     return p;
   };
 })();
+const calcID = (() => {
+  const cache = {};
+  return (position) => {
+    const key = JSON.stringify(position);
+    if (cache[key]) return cache[key];
+    const { row, column } = position;
+    const id = row * 9 + column;
+    cache[key] = id;
+    return id;
+  };
+})();
 
 const cornerNotesWithID = memoize(id => atom({
   key: `cornerNotes:${id}`,
@@ -68,13 +79,16 @@ const valueWithID = memoize(id => atom({
 }));
 
 const findErrors = ({ id, get }) => {
+  // TODO: Check the box for the id as well as columns and rows
   const { row, column } = calcPostion(id);
+  const boxRowOffset = 3 * Math.floor(row / 3);
+  const boxColOffset = 3 * Math.floor(column / 3);
   const currentValue = get(valueWithID(id));
   const foundErrors = [];
 
   POSITIONS.forEach(i => {
     // Check sibling row for dups
-    const rowCheckID = row * 9 + i;
+    const rowCheckID = calcID({ row, column: i });
     if (rowCheckID !== id) {
       const rowCheckValue = get(valueWithID(rowCheckID));
       if (rowCheckValue === currentValue) {
@@ -82,11 +96,23 @@ const findErrors = ({ id, get }) => {
       }
     }
     // Check sibling column for dups
-    const colCheckID = i * 9 + column;
+    const colCheckID = calcID({ column, row: i });
     if (colCheckID !== id) {
       const colCheckValue = get(valueWithID(colCheckID));
       if (colCheckValue === currentValue) {
         foundErrors.push(colCheckID);
+      }
+    }
+
+    // Check values in the same box for dups
+    const boxCheckID = calcID({
+      row:  Math.floor(i / 3) + boxRowOffset,
+      column: i % 3 + boxColOffset
+    });
+    if (boxCheckID !== id) {
+      const boxCheckValue = get(valueWithID(boxCheckID));
+      if (boxCheckValue === currentValue) {
+        foundErrors.push(boxCheckID);
       }
     }
   });
