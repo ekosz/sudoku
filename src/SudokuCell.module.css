@@ -17,6 +17,9 @@
 .primary .value {
   color: var(--primary-color);
 }
+.completed .value {
+  color: var(--completed-color);
+}
 
 .error:not(.selected) {
   background: var(--error-background-color);

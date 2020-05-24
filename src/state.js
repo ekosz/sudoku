@@ -147,6 +147,20 @@ const validatedValueWithID = memoize(id => selector({
   },
 }));
 
+const valueCounts = selector({
+  key: 'valueCounts',
+  get: ({ get }) => {
+    return Array.from(new Array(9 * 9)).reduce((acc, _, idx) => {
+      const value = get(validatedValueWithID(idx));
+      if (value == null) return acc;
+      if (acc[value] == null) {
+        return { ...acc, [value]: 1 };
+      }
+      return { ...acc, [value]: acc[value] + 1 };
+    }, {});
+  },
+});
+
 const errorsAtom = atom({
   key: 'errors',
   default: [],
@@ -239,14 +253,16 @@ const selectionFromInput = selector({
 const cellWithID = memoize(id => selector({
   key: `cell:${id}`,
   get: ({ get }) => {
+    const value = get(validatedValueWithID(id));
     return {
       position: calcPostion(id),
-      value: get(validatedValueWithID(id)),
+      value,
       cornerNotes: get(cornerNotesWithID(id)),
       centerNotes: get(centerNotesWithID(id)),
       background: get(backgroundWithID(id)),
       isSelected: get(selectionAtom).includes(id),
       isPrimary: get(primariesAtom).includes(id),
+      isCompleted: get(valueCounts)[value] === 9,
       hasError: get(errorsAtom).includes(id),
     }
   },

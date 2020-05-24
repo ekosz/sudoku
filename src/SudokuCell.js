@@ -26,6 +26,7 @@ export default function SudokuCell({ id }) {
   const containerClassName = cx([styles.container, {
     [styles.primary]: cell.isPrimary,
     [styles.selected]: cell.isSelected,
+    [styles.completed]: cell.isCompleted,
     [styles.error]: cell.hasError,
   }]);
 
