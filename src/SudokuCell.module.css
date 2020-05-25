@@ -1,5 +1,84 @@
-.container {
+.cell {
+  --cell-height: 56px;
+  --cell-width: 56px;
   position: absolute;
+  height: var(--cell-height);
+  width: var(--cell-width);
+  border-top: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+}
+
+.row-0 {
+  top: 0;
+}
+.row-1 {
+  top: var(--cell-height);
+}
+.row-2 {
+  top: calc(2 * var(--cell-height));
+}
+.row-3 {
+  top: calc(3 * var(--cell-height));
+}
+.row-4 {
+  top: calc(4 * var(--cell-height));
+}
+.row-5 {
+  top: calc(5 * var(--cell-height));
+}
+.row-6 {
+  top: calc(6 * var(--cell-height));
+}
+.row-7 {
+  top: calc(7 * var(--cell-height));
+}
+.row-8 {
+  top: calc(8 * var(--cell-height));
+}
+.row-9 {
+  top: calc(9 * var(--cell-height));
+}
+.col-0 {
+  left: 0;
+}
+.col-1 {
+  left: var(--cell-width);
+}
+.col-2 {
+  left: calc(2 * var(--cell-width));
+}
+.col-3 {
+  left: calc(3 * var(--cell-width));
+}
+.col-4 {
+  left: calc(4 * var(--cell-width));
+}
+.col-5 {
+  left: calc(5 * var(--cell-width));
+}
+.col-6 {
+  left: calc(6 * var(--cell-width));
+}
+.col-7 {
+  left: calc(7 * var(--cell-width));
+}
+.col-8 {
+  left: calc(8 * var(--cell-width));
+}
+.col-9 {
+  left: calc(9 * var(--cell-width));
+}
+.row-0, .row-3, .row-6 {
+  border-top: 3px solid var(--border-color);
+}
+.row-8 {
+  border-bottom: 3px solid var(--border-color);
+}
+.col-0, .col-3, .col-6 {
+  border-left: 3px solid var(--border-color);
+}
+.col-8 {
+  border-right: 3px solid var(--border-color);
 }
 
 .selected {

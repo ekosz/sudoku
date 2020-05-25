@@ -6,16 +6,24 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "bs-webapi": "^0.15.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "reason-react": "0.8.0",
     "recoil": "^0.0.7"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "re:build": "bsb -make-world -clean-world",
+    "re:watch": "bsb -make-world -clean-world -w",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{re,rei}": "bsrefmt --in-place"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -31,5 +39,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "bs-platform": "7.3.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.6"
   }
 }
