@@ -256,13 +256,11 @@ let cellWithID =
     })
   );
 
+// Public APIs
+
 let useCellData = id => Recoil.useRecoilValue(cellWithID(id));
 let useSetCellValue = id =>
   Recoil.useSetRecoilState(validatedValueWithID(id));
-let useSetCornerNotes = id =>
-  Recoil.useSetRecoilState(cornerNotesWithID(id));
-let useSetCenterNotes = id =>
-  Recoil.useSetRecoilState(centerNotesWithID(id));
 let useSetInputMode = () => Recoil.useSetRecoilState(inputModeAtom);
 let useClearSelection = () => {
   let setSelected = Recoil.useSetRecoilState(selectionAtom);
