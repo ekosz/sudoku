@@ -5,7 +5,7 @@
   --error-background-color: rgba(var(--error-value), 0.20);
   --error-color: rgb(var(--error-value));
   --error-value: 255, 0, 0;
-  --note-color: rgba(0, 0, 0, 0.25);
+  --note-color: rgba(0, 0, 0, 0.38);
   --primary-color: black;
   --selection-background-color: yellow;
   --value-color: blue;
@@ -13,12 +13,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --body-background: black;
+    --body-background: #121212;
     --border-color: white;
-    --completed-color: green;
-    --note-color: rgba(255, 255, 255, 0.25);
+    --completed-color: lightgreen;
+    --note-color: rgba(255, 255, 255, 0.38);
     --primary-color: white;
-    --value-color: blue;
+    --selection-background-color: #BB86FC;
+    --value-color: lightblue;
   }
 }
 

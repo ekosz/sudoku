@@ -155,19 +155,27 @@ let errors =
     key: "errors",
     get: ({get}) => {
       let nineList = Belt.List.make(9, None);
-      nineList->Belt.List.reduceWithIndex(Belt.Set.Int.empty, (acc, _, i) => {
-        Belt.List.concatMany([|
-          // Row
-          calcErrors(~get, ~nextID=colIdx => calcID(i, colIdx)),
-          // Column
-          calcErrors(~get, ~nextID=rowIdx => calcID(rowIdx, i)),
-          // Box
-          calcErrors(~get, ~nextID=boxIdx =>
-            calcID(boxIdx / 3 + i / 3, boxIdx mod 3 + i mod 3)
-          ),
-        |])
-        ->Belt.List.reduce(acc, (acc, error) => acc->Belt.Set.Int.add(error))
-      });
+      nineList->Belt.List.reduceWithIndex(
+        Belt.Set.Int.empty,
+        (acc, _, i) => {
+          let boxRowOffset = i / 3 * 3;
+          let boxColOffset = i mod 3 * 3;
+
+          Belt.List.concatMany([|
+            // Row
+            calcErrors(~get, ~nextID=colIdx => calcID(i, colIdx)),
+            // Column
+            calcErrors(~get, ~nextID=rowIdx => calcID(rowIdx, i)),
+            // Box
+            calcErrors(~get, ~nextID=boxIdx =>
+              calcID(boxIdx / 3 + boxRowOffset, boxIdx mod 3 + boxColOffset)
+            ),
+          |])
+          ->Belt.List.reduce(acc, (acc, error) =>
+              acc->Belt.Set.Int.add(error)
+            );
+        },
+      );
     },
   });
 
