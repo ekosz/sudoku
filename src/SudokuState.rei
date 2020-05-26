@@ -16,6 +16,9 @@ type cell = {
   centerNotes: Belt.Set.Int.t,
   isPrimary: bool,
   isSelected: bool,
+  isIndirectlySelected: bool,
+  isRowSelected: bool,
+  isColSelected: bool,
   isCompleted: bool,
   hasError: bool,
 };

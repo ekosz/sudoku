@@ -182,6 +182,19 @@ let errors =
 let selectionAtom =
   Recoil.atom({key: "selection", default: Belt.Set.Int.empty});
 
+let selectedID =
+  Recoil.selector({
+    key: "selectedID",
+    get: ({get}) => {
+      let selections = get(selectionAtom);
+      if (selections->Belt.Set.Int.size == 1) {
+        selections->Belt.Set.Int.toArray->Belt.Array.get(0);
+      } else {
+        None;
+      };
+    },
+  });
+
 let selectionFromInput =
   Recoil.selectorWithWrite({
     key: "selectionFromInput",
@@ -234,6 +247,9 @@ type cell = {
   centerNotes: Belt.Set.Int.t,
   isPrimary: bool,
   isSelected: bool,
+  isIndirectlySelected: bool,
+  isRowSelected: bool,
+  isColSelected: bool,
   isCompleted: bool,
   hasError: bool,
 };
@@ -244,13 +260,41 @@ let cellWithID =
       get: ({get}) => (
         {
           let value = get(validatedValueWithID(id));
+          let selectedID = get(selectedID);
+          let selectedValue =
+            switch (selectedID) {
+            | Some(id) => get(validatedValueWithID(id))
+            | None => None
+            };
+          let selectedPosition =
+            switch (selectedID) {
+            | Some(id) => Some(calcPostion(id))
+            | _ => None
+            };
+          let isSelected = get(selectionAtom)->Belt.Set.Int.has(id);
+          let cellPosition = calcPostion(id);
 
           {
-            position: calcPostion(id),
+            position: cellPosition,
             value,
             cornerNotes: get(cornerNotesWithID(id)),
             centerNotes: get(centerNotesWithID(id)),
-            isSelected: get(selectionAtom)->Belt.Set.Int.has(id),
+            isSelected,
+            isIndirectlySelected:
+              switch (isSelected, selectedValue, value) {
+              | (false, Some(a), Some(b)) => a == b
+              | _ => false
+              },
+            isRowSelected:
+              switch (selectedPosition) {
+              | Some({row}) => cellPosition.row == row
+              | _ => false
+              },
+            isColSelected:
+              switch (selectedPosition) {
+              | Some({col}) => cellPosition.col == col
+              | _ => false
+              },
             isPrimary: get(primariesAtom)->Belt.Set.Int.has(id),
             isCompleted:
               switch (value) {
@@ -267,8 +311,6 @@ let cellWithID =
 // Public APIs
 
 let useCellData = id => Recoil.useRecoilValue(cellWithID(id));
-let useSetCellValue = id =>
-  Recoil.useSetRecoilState(validatedValueWithID(id));
 let useSetInputMode = () => Recoil.useSetRecoilState(inputModeAtom);
 let useClearSelection = () => {
   let setSelected = Recoil.useSetRecoilState(selectionAtom);

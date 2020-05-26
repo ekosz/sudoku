@@ -85,6 +85,10 @@
   background: var(--selection-background-color);
 }
 
+.indirectly-selected, .row-or-col-selected {
+  background: var(--indirect-selection-background-color);
+}
+
 .value {
   display: flex;
   width: 100%;

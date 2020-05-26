@@ -5,9 +5,12 @@
   --error-background-color: rgba(var(--error-value), 0.20);
   --error-color: rgb(var(--error-value));
   --error-value: 255, 0, 0;
-  --note-color: rgba(0, 0, 0, 0.38);
-  --primary-color: black;
-  --selection-background-color: yellow;
+  --indirect-selection-background-color: rgba(var(--selection-value), 0.5);
+  --note-color: rgba(var(--primary-value), 0.38);
+  --primary-color: rgb(var(--primary-value));
+  --primary-value: 0, 0, 0;
+  --selection-background-color: rgb(var(--selection-value));
+  --selection-value: 255, 255, 0;
   --value-color: blue;
 }
 
@@ -16,9 +19,8 @@
     --body-background: #121212;
     --border-color: white;
     --completed-color: lightgreen;
-    --note-color: rgba(255, 255, 255, 0.38);
-    --primary-color: white;
-    --selection-background-color: #BB86FC;
+    --primary-value: 255, 255, 255;
+    --selection-value: 187, 134, 252;
     --value-color: lightblue;
   }
 }

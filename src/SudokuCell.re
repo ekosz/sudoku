@@ -61,6 +61,12 @@ let make = (~id) => {
       getStyle("cell"),
       getStyle("primary")->Classnames.ifTrue(cell.isPrimary),
       getStyle("selected")->Classnames.ifTrue(cell.isSelected),
+      getStyle("row-or-col-selected")
+      ->Classnames.ifTrue(
+          !cell.isSelected && (cell.isRowSelected || cell.isColSelected),
+        ),
+      getStyle("indirectly-selected")
+      ->Classnames.ifTrue(cell.isIndirectlySelected),
       getStyle("completed")->Classnames.ifTrue(cell.isCompleted),
       getStyle("error")->Classnames.ifTrue(cell.hasError),
     ]);
