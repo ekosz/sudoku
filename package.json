@@ -11,7 +11,8 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "reason-react": "0.8.0",
-    "recoil": "^0.0.7"
+    "recoil": "^0.0.7",
+    "sudoku-solver-js": "^0.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

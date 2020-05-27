@@ -10053,6 +10053,11 @@ stylehacks@^4.0.0:
     postcss "^7.0.0"
     postcss-selector-parser "^3.0.0"
 
+sudoku-solver-js@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/sudoku-solver-js/-/sudoku-solver-js-0.1.4.tgz#5371c143e10e10ab77eb582ade2e658ffc60952f"
+  integrity sha512-KdxMYfz2M4Y/VNOPHHGuyD40VpYnj89NSonNYzQNDxl6zz9CfGbTI7eVAINEB1mvN+zp5G1+78yHlPmDWZUaCA==
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"

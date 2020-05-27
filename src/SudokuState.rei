@@ -29,3 +29,4 @@ let useToggleSelection: (int, bool => bool) => unit;
 let useSetSelectionFromInput: unit => Recoil.setter(option(int));
 let useSetInputMode: unit => Recoil.setter(inputMode);
 let useClearSelection: (unit, unit) => unit;
+let useSetSolutions: unit => Recoil.setter(unit);

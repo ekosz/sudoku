@@ -12,8 +12,9 @@ let make = () => {
   let setSelectionValue = SudokuState.useSetSelectionFromInput();
   let setInputMode = SudokuState.useSetInputMode();
   let clearSelection = SudokuState.useClearSelection();
+  let solveSoduku = SudokuState.useSetSolutions();
 
-  React.useEffect2(
+  React.useEffect3(
     () => {
       let handleKeyboardEvent = event => {
         switch (event->Webapi.Dom.KeyboardEvent.key) {
@@ -34,6 +35,7 @@ let make = () => {
         | "x" => setInputMode(_ => SudokuState.Corners)
         | "c" => setInputMode(_ => SudokuState.Center)
         | "*" => setInputMode(_ => SudokuState.Primary)
+        | "S" => solveSoduku(_ => ())
         | _ => ()
         };
       };
@@ -47,7 +49,7 @@ let make = () => {
              ),
       );
     },
-    (setInputMode, setSelectionValue),
+    (setInputMode, setSelectionValue, solveSoduku),
   );
 
   let gameRef = React.useRef(Js.Nullable.null);

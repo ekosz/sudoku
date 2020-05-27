@@ -56,6 +56,9 @@ let valueWithID =
     Recoil.atom({key: {j|value:$id|j}, default: (None: option(int))})
   });
 
+let solutionWithID =
+  memoizeByInt(id => {Recoil.atom({key: {j|solution:$id|j}, default: None})});
+
 let isValidValue = (newValue): bool =>
   switch (newValue) {
   | Some(value) =>
@@ -78,6 +81,24 @@ let validatedValueWithID =
           set(valueWithID(id), newValue);
         },
     })
+  });
+
+let setSolutions =
+  Recoil.selectorWithWrite({
+    key: "setSolutions",
+    get: ({get: _get}) => (),
+    set: ({get, set}, _newValue) => {
+      let currentBoard =
+        Belt.List.make(9 * 9, None)
+        ->Belt.List.mapWithIndex((idx, _item) =>
+            get(validatedValueWithID(idx))
+          );
+      Kudoku.make()->Kudoku.solve(Kudoku.makePuzzle(currentBoard))
+      |> Js.Array.forEachi((solution, idx) =>
+           set(solutionWithID(idx), Some(solution))
+         );
+      Webapi.Dom.window |> Webapi.Dom.Window.alert("Solution set");
+    },
   });
 
 let primaryWithID =
@@ -104,21 +125,17 @@ let valueCounts =
     key: "valueCounts",
     get: ({get}) => {
       Belt.List.make(9 * 9, None)
-      ->Belt.List.reduceWithIndex(
-          Belt.Map.Int.empty,
-          (acc, _item, idx) => {
-            let maybeValue = get(validatedValueWithID(idx));
-            switch (maybeValue) {
-            | None => acc
-            | Some(value) =>
-              switch (acc->Belt.Map.Int.get(value)) {
-              | None => acc->Belt.Map.Int.set(value, 1)
-              | Some(currentCount) =>
-                acc->Belt.Map.Int.set(value, currentCount + 1)
-              }
-            };
-          },
-        );
+      ->Belt.List.reduceWithIndex(Belt.Map.Int.empty, (acc, _item, idx) => {
+          switch (get(validatedValueWithID(idx))) {
+          | None => acc
+          | Some(value) =>
+            switch (acc->Belt.Map.Int.get(value)) {
+            | None => acc->Belt.Map.Int.set(value, 1)
+            | Some(currentCount) =>
+              acc->Belt.Map.Int.set(value, currentCount + 1)
+            }
+          }
+        });
     },
   });
 
@@ -130,8 +147,7 @@ let calcErrors = (~get, ~nextID) => {
       Belt.Map.Int.empty,
       (acc, _, idx) => {
         let id = nextID(idx);
-        let maybeValue = get(validatedValueWithID(id));
-        switch (maybeValue) {
+        switch (get(validatedValueWithID(id))) {
         | None => acc
         | Some(value) =>
           switch (acc->Belt.Map.Int.get(value)) {
@@ -141,11 +157,18 @@ let calcErrors = (~get, ~nextID) => {
         };
       },
     )
-  ->Belt.Map.Int.reduce([], (acc, _key, value) =>
-      if (Belt.List.length(value) > 1) {
-        Belt.List.concat(acc, value);
+  ->Belt.Map.Int.reduce([], (acc, value, ids) =>
+      if (Belt.List.length(ids) > 1) {
+        Belt.List.concat(acc, ids);
       } else {
-        acc;
+        acc->Belt.List.concat(
+          ids->Belt.List.keep(id => {
+            switch (get(solutionWithID(id))) {
+            | None => false
+            | Some(solution) => solution != value
+            }
+          }),
+        );
       }
     );
 };
@@ -333,3 +356,4 @@ let useToggleSelection = id => {
 };
 let useSetSelectionFromInput = () =>
   Recoil.useSetRecoilState(selectionFromInput);
+let useSetSolutions = () => Recoil.useSetRecoilState(setSolutions);
